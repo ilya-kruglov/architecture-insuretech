@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scaletest-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: scaletest-app
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+        metricName: http_requests_total_value
+        query: sum(rate(http_requests_total[2m])) or vector(0)
+        threshold: "10"
