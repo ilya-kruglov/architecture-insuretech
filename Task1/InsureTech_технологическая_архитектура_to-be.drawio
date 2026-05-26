@@ -1,0 +1,91 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram name="to-be" id="to-be-arch">
+    <mxGraphModel dx="1426" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="browser" value="Браузер пользователя" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="120" y="20" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gslb" value="Global Server Load Balancer (GSLB)&#xa;GeoDNS / Health Checks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="460" y="20" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="browser-gslb" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;" parent="1" source="browser" target="gslb" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="region-west" value="Регион Запад (Москва)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="40" y="140" width="520" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="k8s-west" value="Kubernetes Cluster West" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" parent="region-west" vertex="1">
+          <mxGeometry x="20" y="40" width="440" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pods-west" value="Pods: core-app, client-info,&#xa;ins-product-aggregator, ins-comp-settlement" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="k8s-west" vertex="1">
+          <mxGeometry x="20" y="20" width="400" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hpa-west" value="HPA (CPU / RPS / custom)" style="shape=note;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;" parent="k8s-west" vertex="1">
+          <mxGeometry x="20" y="80" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="backup-west" value="S3 Backup&#xa;(Full + WAL)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="region-west" vertex="1">
+          <mxGeometry x="390" y="390" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="region-east" value="Регион Восток (Новосибирск)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="640" y="140" width="520" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="k8s-east" value="Kubernetes Cluster East" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" parent="region-east" vertex="1">
+          <mxGeometry x="20" y="40" width="440" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pods-east" value="Pods: core-app, client-info,&#xa;ins-product-aggregator, ins-comp-settlement" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="k8s-east" vertex="1">
+          <mxGeometry x="20" y="20" width="400" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hpa-east" value="HPA (CPU / RPS / custom)" style="shape=note;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;" parent="k8s-east" vertex="1">
+          <mxGeometry x="20" y="80" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="db-west" value="PostgreSQL Master&#xa;(RW)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" parent="region-east" vertex="1">
+          <mxGeometry x="-210" y="270" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="db-east" value="PostgreSQL Replica&#xa;(RO)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" parent="region-east" vertex="1">
+          <mxGeometry x="390" y="270" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="repl-arrow" value="Streaming Replication (async)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;strokeColor=#82b366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" parent="region-east" source="db-west" target="db-east" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-160" y="170" />
+              <mxPoint x="440" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gslb-west" value="HTTP (read/write)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.323;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="gslb" target="k8s-west" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gslb-east" value="HTTP (read only)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.773;entryY=-0.017;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="gslb" target="k8s-east" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="health-west" value="Health Check (TCP/HTTP /health)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d6b656;strokeWidth=1;dashed=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.139;entryY=0.017;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="gslb" target="k8s-west" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="516" y="110" />
+              <mxPoint x="121" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="health-east" value="Health Check (TCP/HTTP /health)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d6b656;strokeWidth=1;dashed=1;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.864;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="gslb" target="k8s-east" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="684" y="110" />
+              <mxPoint x="1080" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cdn" value="CDN (статический контент)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bae1ff;strokeColor=#1e90ff;" parent="1" vertex="1">
+          <mxGeometry x="500" y="680" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cdn-gslb" value="Origin fetch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" parent="1" source="cdn" target="gslb" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comment" value="Комментарии к архитектуре (to‑be):&lt;br&gt;• Независимые кластеры K8s в двух регионах (задержки &amp;gt;5мс) – изоляция сбоев.&lt;br&gt;• GSLB с GeoDNS + health‑check (/health) направляет пользователя в ближайший кластер.&lt;br&gt;• Фейловер: Active‑Active (чтение) / Active‑Passive (запись). При падении мастера (Запад) реплика (Восток) автоматически повышается (Patroni / managed DB), RTO &amp;lt;45 мин.&lt;br&gt;• Резервное копирование: полный бэкап ежедневно + WAL‑архивация каждые 5–10 мин в S3, RPO 15 мин.&lt;br&gt;• Горизонтальное масштабирование: HPA (CPU, RPS, custom metrics) + Cluster Autoscaler (ноды).&lt;br&gt;• CDN для статики – снижает нагрузку на бэкенд и ускоряет загрузку для всех регионов.&lt;br&gt;• Шардирование БД не требуется (50 ГБ)." style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="40" y="760" width="800" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
